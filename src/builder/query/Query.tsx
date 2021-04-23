@@ -20,11 +20,11 @@ export const Query = (props: QueryBuilderProps) => (
     components={{
       DatasourceMetadata: DatasourceMetadata,
       GroupBy: GroupBy,
-      Json: Json,
+      JSON: Json,
       Scan: Scan,
       Search: Search,
       SegmentMetadata: SegmentMetadata,
-      Sql: Sql,
+      SQL: Sql,
       TimeBoundary: TimeBoundary,
       Timeseries: Timeseries,
       TopN: TopN,

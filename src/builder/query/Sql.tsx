@@ -1,7 +1,37 @@
-import React, { PureComponent, FormEvent, ChangeEvent } from 'react';
+import React, { PureComponent } from 'react';
 import { css } from 'emotion';
-import { TextArea } from '@grafana/ui';
+import { QueryField, TypeaheadInput, TypeaheadOutput } from '@grafana/ui';
 import { QueryBuilderProps, QueryBuilderOptions } from '../types';
+import { debounce } from 'lodash';
+
+const DRUID_SQL_KEYWORDS = [
+  'ALL',
+  'AS',
+  'ASC',
+  'BY',
+  'CUBE',
+  'DESC',
+  'DISTINCT',
+  'EXPLAIN',
+  'FOR',
+  'FROM',
+  'GROUP',
+  'GROUPING',
+  'HAVING',
+  'INNER',
+  'JOIN',
+  'LEFT',
+  'LIMIT',
+  'OFFSET',
+  'ON',
+  'ORDER',
+  'ROLLUP',
+  'SELECT',
+  'SETS',
+  'UNION',
+  'WHERE',
+  'WITH',
+];
 
 export class Sql extends PureComponent<QueryBuilderProps> {
   constructor(props: QueryBuilderProps) {
@@ -20,10 +50,10 @@ export class Sql extends PureComponent<QueryBuilderProps> {
     }
   };
 
-  onInputChange = (event: FormEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement>) => {
+  onChange = (val: string) => {
     const { options, onOptionsChange } = this.props;
     const { builder } = options;
-    builder[event.currentTarget.name] = event.currentTarget.value;
+    builder['query'] = val;
     onOptionsChange({ ...options, builder: builder });
   };
 
@@ -34,6 +64,17 @@ export class Sql extends PureComponent<QueryBuilderProps> {
     onOptionsChange({ ...options, builder, settings });
   };
 
+  onTypeAhead = async (input: TypeaheadInput): Promise<TypeaheadOutput> => {
+    return {
+      suggestions: [
+        {
+          label: 'Druid SQL keywords',
+          items: DRUID_SQL_KEYWORDS.map((kw) => ({ label: kw })),
+        },
+      ],
+    };
+  };
+
   render() {
     const { builder } = this.props.options;
     return (
@@ -41,15 +82,16 @@ export class Sql extends PureComponent<QueryBuilderProps> {
         <div className="gf-form">
           <div
             className={css`
-              width: 300px;
+              width: 100%;
             `}
           >
-            <label className="gf-form-label">SQL query</label>
-            <TextArea
-              name="query"
+            <label className="gf-form-label">SQL Query</label>
+            <QueryField
+              portalOrigin=""
+              query={builder.query}
               placeholder="The SQL query. e.g: SELECT * FROM datasource"
-              value={builder.query}
-              onChange={this.onInputChange}
+              onChange={debounce(this.onChange, 100)}
+              onTypeahead={this.onTypeAhead}
             />
           </div>
         </div>

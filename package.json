@@ -16,7 +16,8 @@
     "@grafana/runtime": "7.4.3",
     "@grafana/toolkit": "7.4.3",
     "@grafana/ui": "7.4.3",
-    "@types/lodash": "latest"
+    "@types/lodash": "^4.14.168",
+    "@types/prismjs": "^1.16.5"
   },
   "resolutions": {
     "rxjs": "6.6.3"
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "@types/react-datepicker": "^3.1.2",
+    "prismjs": "^1.23.0",
     "react-datepicker": "^3.3.0"
   }
 }

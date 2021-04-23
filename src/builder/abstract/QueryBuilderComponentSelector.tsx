@@ -64,8 +64,19 @@ export const QueryBuilderComponentSelector = (props: QueryBuilderComponentSelect
 
   return (
     <>
-      <InlineField label={props.name} grow>
-        <Select options={options} value={selectedOption} onChange={onSelection} isClearable={true} />
+      <InlineField label={props.name}>
+        <Select
+          options={options}
+          value={selectedOption}
+          onChange={onSelection}
+          isClearable={true}
+          width={
+            Math.max.apply(
+              Math,
+              options.map((o) => o.value?.length as number)
+            ) + 5
+          }
+        />
       </InlineField>
       {Component && <Component {...props.queryBuilderProps} />}
     </>

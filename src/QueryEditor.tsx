@@ -8,7 +8,7 @@ import { QuerySettingsOptions } from './configuration/QuerySettings/types';
 import { DruidQueryBuilder } from './builder/';
 import { QueryBuilderOptions } from './builder/types';
 
-enum Tabs {
+enum DruidQueryEditorTab {
   Builder,
   Settings,
 }
@@ -16,15 +16,15 @@ enum Tabs {
 interface Props extends QueryEditorProps<DruidDataSource, DruidQuery, DruidSettings> {}
 
 interface State {
-  activeTab: Tabs;
+  activeTab: DruidQueryEditorTab;
 }
 
 export class QueryEditor extends PureComponent<Props, State> {
   state: State = {
-    activeTab: Tabs.Builder,
+    activeTab: DruidQueryEditorTab.Builder,
   };
 
-  onSelectTab = (item: SelectableValue<Tabs>) => {
+  onSelectTab = (item: SelectableValue<DruidQueryEditorTab>) => {
     this.setState({ activeTab: item.value! });
   };
 
@@ -73,13 +73,13 @@ export class QueryEditor extends PureComponent<Props, State> {
 
     const BuilderTab = {
       label: 'Builder',
-      value: Tabs.Builder,
+      value: DruidQueryEditorTab.Builder,
       content: <DruidQueryBuilder options={builderOptions} onOptionsChange={this.onBuilderOptionsChange} />,
       icon: 'edit',
     };
     const SettingsTab = {
       label: 'Settings',
-      value: Tabs.Settings,
+      value: DruidQueryEditorTab.Settings,
       content: <DruidQuerySettings options={settingsOptions} onOptionsChange={this.onSettingsOptionsChange} />,
       icon: 'cog',
     };
