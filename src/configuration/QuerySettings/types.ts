@@ -6,7 +6,7 @@ export interface QueryContextParameter {
 export interface QuerySettings {
   format?: string;
   contextParameters?: QueryContextParameter[];
-  runQueriesManually?: boolean;
+  querySubmitDelay?: number;
   hideEmptyColumns?: boolean;
   responseLimit?: number;
   logColumnTime?: string;

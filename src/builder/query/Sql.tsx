@@ -1,37 +1,9 @@
-import React, { PureComponent } from 'react';
 import { css } from 'emotion';
-import { QueryField, TypeaheadInput, TypeaheadOutput } from '@grafana/ui';
+import { DRUID_SQL_KEYWORDS_FUNCS, DruidSQLPrismGrammar } from './grammar';
+import { LanguageMap, languages as prismLanguages } from 'prismjs';
 import { QueryBuilderProps, QueryBuilderOptions } from '../types';
-import { debounce } from 'lodash';
-
-const DRUID_SQL_KEYWORDS = [
-  'ALL',
-  'AS',
-  'ASC',
-  'BY',
-  'CUBE',
-  'DESC',
-  'DISTINCT',
-  'EXPLAIN',
-  'FOR',
-  'FROM',
-  'GROUP',
-  'GROUPING',
-  'HAVING',
-  'INNER',
-  'JOIN',
-  'LEFT',
-  'LIMIT',
-  'OFFSET',
-  'ON',
-  'ORDER',
-  'ROLLUP',
-  'SELECT',
-  'SETS',
-  'UNION',
-  'WHERE',
-  'WITH',
-];
+import { QueryField, SlatePrism, TypeaheadInput, TypeaheadOutput } from '@grafana/ui';
+import React, { PureComponent } from 'react';
 
 export class Sql extends PureComponent<QueryBuilderProps> {
   constructor(props: QueryBuilderProps) {
@@ -68,8 +40,8 @@ export class Sql extends PureComponent<QueryBuilderProps> {
     return {
       suggestions: [
         {
-          label: 'Druid SQL keywords',
-          items: DRUID_SQL_KEYWORDS.map((kw) => ({ label: kw })),
+          label: 'Druid SQL keywords and functions',
+          items: DRUID_SQL_KEYWORDS_FUNCS.map((kw) => ({ label: kw })),
         },
       ],
     };
@@ -87,10 +59,19 @@ export class Sql extends PureComponent<QueryBuilderProps> {
           >
             <label className="gf-form-label">SQL Query</label>
             <QueryField
+              additionalPlugins={[
+                SlatePrism(
+                  {
+                    onlyIn: (node: any) => node.type === 'code_block',
+                    getSyntax: (_: any) => 'druidsql',
+                  },
+                  { ...(prismLanguages as LanguageMap), druidsql: DruidSQLPrismGrammar }
+                ),
+              ]}
               portalOrigin=""
               query={builder.query}
               placeholder="The SQL query. e.g: SELECT * FROM datasource"
-              onChange={debounce(this.onChange, 100)}
+              onChange={this.onChange}
               onTypeahead={this.onTypeAhead}
             />
           </div>

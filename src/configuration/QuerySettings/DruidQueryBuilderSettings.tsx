@@ -1,36 +1,36 @@
 import React, { PureComponent, ChangeEvent } from 'react';
-import { InlineFieldRow, InlineField, InlineSwitch } from '@grafana/ui';
+import { InlineFieldRow, InlineField, Input } from '@grafana/ui';
 import { QuerySettingsProps } from './types';
 
 export class DruidQueryBuilderSettings extends PureComponent<QuerySettingsProps> {
   constructor(props: QuerySettingsProps) {
     super(props);
-
-    const { settings } = this.props.options;
-
-    if (settings.runQueriesManually === undefined) {
-      settings.runQueriesManually = false;
-    }
   }
 
   onRunManualQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { options, onOptionsChange } = this.props;
     const { settings } = options;
-    settings.runQueriesManually = event!.currentTarget.checked;
+    onOptionsChange({ ...options, settings });
+  };
+
+  onQuerySubmitDelayChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { options, onOptionsChange } = this.props;
+    const { settings } = options;
+    settings.querySubmitDelay = +event!.currentTarget.value;
     onOptionsChange({ ...options, settings });
   };
 
   render() {
     const { settings } = this.props.options;
     return (
-      <div className={'gf-form-group'}>
+      <div className="gf-form-group">
         <h3 className="page-heading">Query builder options</h3>
         <InlineFieldRow>
           <InlineField
-            label="Run queries manually (Shift+Enter)"
-            tooltip="Do not run queries automatically when typing, instead only when Shift+Enter are pressed"
+            label="Query submit delay (ms)"
+            tooltip="Milliseconds to wait for after input stops until submitting query"
           >
-            <InlineSwitch value={settings.runQueriesManually} disabled={false} onChange={this.onRunManualQueryChange} />
+            <Input placeholder="100" value={settings.querySubmitDelay!} onChange={this.onQuerySubmitDelayChange} />
           </InlineField>
         </InlineFieldRow>
       </div>

@@ -6,4 +6,5 @@ export interface QueryBuilderOptions {
 export interface QueryBuilderProps {
   options: QueryBuilderOptions;
   onOptionsChange: (options: QueryBuilderOptions) => void;
+  onKeyDown?: (event: KeyboardEvent) => void;
 }

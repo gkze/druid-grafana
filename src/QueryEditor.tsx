@@ -4,9 +4,10 @@ import { SelectableValue, QueryEditorProps } from '@grafana/data';
 import { DruidDataSource } from './DruidDataSource';
 import { DruidSettings, DruidQuery } from './types';
 import { DruidQuerySettings } from './configuration/QuerySettings';
-import { QuerySettingsOptions } from './configuration/QuerySettings/types';
+import { QuerySettingsOptions, QuerySettings } from './configuration/QuerySettings/types';
 import { DruidQueryBuilder } from './builder/';
 import { QueryBuilderOptions } from './builder/types';
+import { debounce } from 'lodash';
 
 enum DruidQueryEditorTab {
   Builder,
@@ -20,9 +21,7 @@ interface State {
 }
 
 export class QueryEditor extends PureComponent<Props, State> {
-  state: State = {
-    activeTab: DruidQueryEditorTab.Builder,
-  };
+  state: State = { activeTab: DruidQueryEditorTab.Builder };
 
   onSelectTab = (item: SelectableValue<DruidQueryEditorTab>) => {
     this.setState({ activeTab: item.value! });
@@ -70,11 +69,17 @@ export class QueryEditor extends PureComponent<Props, State> {
   render() {
     const builderOptions = this.builderOptions();
     const settingsOptions = this.settingsOptions();
+    const querySubmitDelay = (builderOptions.settings as QuerySettings).querySubmitDelay || 100;
 
     const BuilderTab = {
       label: 'Builder',
       value: DruidQueryEditorTab.Builder,
-      content: <DruidQueryBuilder options={builderOptions} onOptionsChange={this.onBuilderOptionsChange} />,
+      content: (
+        <DruidQueryBuilder
+          options={builderOptions}
+          onOptionsChange={debounce(this.onBuilderOptionsChange, querySubmitDelay)}
+        />
+      ),
       icon: 'edit',
     };
     const SettingsTab = {

@@ -1,5 +1,6 @@
-export { DruidQueryDefaultSettings } from './DruidQueryDefaultSettings';
-export { DruidQuerySettings } from './DruidQuerySettings';
+export { DruidQueryBuilderSettings } from './DruidQueryBuilderSettings';
 export { DruidQueryContextSettings } from './DruidQueryContextSettings';
-export { DruidQueryResponseSettings } from './DruidQueryResponseSettings';
+export { DruidQueryDefaultSettings } from './DruidQueryDefaultSettings';
 export { DruidQueryLogSettings } from './DruidQueryLogSettings';
+export { DruidQueryResponseSettings } from './DruidQueryResponseSettings';
+export { DruidQuerySettings } from './DruidQuerySettings';
